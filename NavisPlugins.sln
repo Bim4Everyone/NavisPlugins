@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.32106.194
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NavisPlugins", "NavisPlugins\NavisPlugins.csproj", "{975426AD-0904-4429-B515-F90774487BCA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NavisPlugins", "NavisPlugins\NavisPlugins.csproj", "{975426AD-0904-4429-B515-F90774487BCA}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NavisDisciplineChecker", "NavisDisciplineChecker\NavisDisciplineChecker.csproj", "{DC5E94C4-3D8F-40DF-9798-0AC563592746}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{975426AD-0904-4429-B515-F90774487BCA}.D2022|x64.Build.0 = D2022|x64
 		{975426AD-0904-4429-B515-F90774487BCA}.R2022|x64.ActiveCfg = R2022|x64
 		{975426AD-0904-4429-B515-F90774487BCA}.R2022|x64.Build.0 = R2022|x64
+		{DC5E94C4-3D8F-40DF-9798-0AC563592746}.D2022|x64.ActiveCfg = R2022|x64
+		{DC5E94C4-3D8F-40DF-9798-0AC563592746}.D2022|x64.Build.0 = R2022|x64
+		{DC5E94C4-3D8F-40DF-9798-0AC563592746}.R2022|x64.ActiveCfg = Release|Any CPU
+		{DC5E94C4-3D8F-40DF-9798-0AC563592746}.R2022|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

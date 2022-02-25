@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<TargetFramework>net48</TargetFramework>
+		<Platforms>x64</Platforms>
+		<Configurations>R2022;D2022</Configurations>
+	</PropertyGroup>
+	<ItemGroup>
+		<Reference Include="Autodesk.Navisworks.Api">
+			<HintPath>$(ProgramW6432)\Autodesk\Navisworks Manage 2022\Autodesk.Navisworks.Api.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="System.Windows.Forms" />
+	</ItemGroup>
+</Project>

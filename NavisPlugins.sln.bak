@@ -1,0 +1,59 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.32106.194
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NavisPlugins", "NavisPlugins\NavisPlugins.csproj", "{975426AD-0904-4429-B515-F90774487BCA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NavisDisciplineChecker", "NavisDisciplineChecker\NavisDisciplineChecker.csproj", "{DC5E94C4-3D8F-40DF-9798-0AC563592746}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		D2022|Any CPU = D2022|Any CPU
+		D2022|x64 = D2022|x64
+		Debug|Any CPU = Debug|Any CPU
+		Debug|x64 = Debug|x64
+		R2022|Any CPU = R2022|Any CPU
+		R2022|x64 = R2022|x64
+		Release|Any CPU = Release|Any CPU
+		Release|x64 = Release|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{975426AD-0904-4429-B515-F90774487BCA}.D2022|Any CPU.ActiveCfg = D2022|x64
+		{975426AD-0904-4429-B515-F90774487BCA}.D2022|x64.ActiveCfg = D2022|x64
+		{975426AD-0904-4429-B515-F90774487BCA}.D2022|x64.Build.0 = D2022|x64
+		{975426AD-0904-4429-B515-F90774487BCA}.Debug|Any CPU.ActiveCfg = R2022|x64
+		{975426AD-0904-4429-B515-F90774487BCA}.Debug|Any CPU.Build.0 = R2022|x64
+		{975426AD-0904-4429-B515-F90774487BCA}.Debug|x64.ActiveCfg = D2022|x64
+		{975426AD-0904-4429-B515-F90774487BCA}.Debug|x64.Build.0 = D2022|x64
+		{975426AD-0904-4429-B515-F90774487BCA}.R2022|Any CPU.ActiveCfg = R2022|x64
+		{975426AD-0904-4429-B515-F90774487BCA}.R2022|x64.ActiveCfg = R2022|x64
+		{975426AD-0904-4429-B515-F90774487BCA}.R2022|x64.Build.0 = R2022|x64
+		{975426AD-0904-4429-B515-F90774487BCA}.Release|Any CPU.ActiveCfg = R2022|x64
+		{975426AD-0904-4429-B515-F90774487BCA}.Release|Any CPU.Build.0 = R2022|x64
+		{975426AD-0904-4429-B515-F90774487BCA}.Release|x64.ActiveCfg = R2022|x64
+		{975426AD-0904-4429-B515-F90774487BCA}.Release|x64.Build.0 = R2022|x64
+		{DC5E94C4-3D8F-40DF-9798-0AC563592746}.D2022|Any CPU.ActiveCfg = Debug|Any CPU
+		{DC5E94C4-3D8F-40DF-9798-0AC563592746}.D2022|Any CPU.Build.0 = Debug|Any CPU
+		{DC5E94C4-3D8F-40DF-9798-0AC563592746}.D2022|x64.ActiveCfg = Debug|Any CPU
+		{DC5E94C4-3D8F-40DF-9798-0AC563592746}.D2022|x64.Build.0 = Debug|Any CPU
+		{DC5E94C4-3D8F-40DF-9798-0AC563592746}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DC5E94C4-3D8F-40DF-9798-0AC563592746}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DC5E94C4-3D8F-40DF-9798-0AC563592746}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{DC5E94C4-3D8F-40DF-9798-0AC563592746}.Debug|x64.Build.0 = Debug|Any CPU
+		{DC5E94C4-3D8F-40DF-9798-0AC563592746}.R2022|Any CPU.ActiveCfg = Release|Any CPU
+		{DC5E94C4-3D8F-40DF-9798-0AC563592746}.R2022|Any CPU.Build.0 = Release|Any CPU
+		{DC5E94C4-3D8F-40DF-9798-0AC563592746}.R2022|x64.ActiveCfg = Release|Any CPU
+		{DC5E94C4-3D8F-40DF-9798-0AC563592746}.R2022|x64.Build.0 = Release|Any CPU
+		{DC5E94C4-3D8F-40DF-9798-0AC563592746}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DC5E94C4-3D8F-40DF-9798-0AC563592746}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DC5E94C4-3D8F-40DF-9798-0AC563592746}.Release|x64.ActiveCfg = Release|Any CPU
+		{DC5E94C4-3D8F-40DF-9798-0AC563592746}.Release|x64.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {30431154-B7DA-444C-B8B8-7B5C57BC25E2}
+	EndGlobalSection
+EndGlobal
