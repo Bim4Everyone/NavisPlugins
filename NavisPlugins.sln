@@ -5,6 +5,15 @@ VisualStudioVersion = 16.0.32106.194
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NavisPlugins", "NavisPlugins\NavisPlugins.csproj", "{975426AD-0904-4429-B515-F90774487BCA}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{2BF3938F-23C2-415E-8F66-FE1E6B448B27}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+		CONTRIBUTING.md = CONTRIBUTING.md
+		CREDITS.md = CREDITS.md
+		LICENSE.md = LICENSE.md
+		README.md = README.md
+	EndProjectSection
+EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NavisDisciplineChecker", "NavisDisciplineChecker\NavisDisciplineChecker.csproj", "{DC5E94C4-3D8F-40DF-9798-0AC563592746}"
 EndProject
 Global
