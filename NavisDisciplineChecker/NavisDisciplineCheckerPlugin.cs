@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
@@ -22,12 +21,12 @@ namespace NavisDisciplineChecker {
             var rootPath = Path.GetDirectoryName(nwfFilePath);
             var nwdRootPath = Path.GetDirectoryName(rootPath);
 
-            string nwdFilePath = 
+            string nwdFilePath =
                 Path.Combine(nwdRootPath, Path.ChangeExtension(Path.GetFileName(nwfFilePath), ".nwd"));
-           
+
             string mainModelPath =
                 Path.Combine(Path.GetDirectoryName(nwdRootPath), "Сводная модель");
-            
+
             string nwdMainModelFilePath =
                 Path.Combine(mainModelPath, Path.ChangeExtension(Path.GetFileName(nwfFilePath), ".nwd"));
 
