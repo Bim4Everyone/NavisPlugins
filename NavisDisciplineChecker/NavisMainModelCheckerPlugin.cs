@@ -16,7 +16,7 @@ namespace NavisDisciplineChecker
             var rootPath = Path.GetDirectoryName(nwfFilePath);
 
             var nwdFileName 
-                = DateTime.Now.ToString("yy.mm.dd") + "_" +
+                = DateTime.Now.ToString("yy.MM.dd") + "_" +
                   Path.ChangeExtension(Path.GetFileName(nwfFilePath), ".nwd");
             
             var nwdFileNames =
