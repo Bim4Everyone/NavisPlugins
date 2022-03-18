@@ -11,42 +11,37 @@ namespace NavisDisciplineChecker {
     [Plugin("NavisDisciplineChecker", "budaevaler", DisplayName = "Проверка nwf", ToolTip = "Проверка nwf по разделам")]
     public class NavisDisciplineCheckerPlugin : AddInPlugin {
         public override int Execute(params string[] parameters) {
-            OverwriteModels();
+            CombineDisciplineFiles();
             return 0;
         }
 
-        private void OverwriteModels() {
+        private void CombineDisciplineFiles() {
             var document = Application.ActiveDocument;
-            var path = Path.GetDirectoryName(document.FileName);
-            var nwcFiles = Directory.GetFiles(path, "*.nwc");
+
+            var nwfFilePath = document.FileName;
+            var rootPath = Path.GetDirectoryName(nwfFilePath);
+            var nwdRootPath = Path.GetDirectoryName(rootPath);
+
+            string nwdFilePath = 
+                Path.Combine(nwdRootPath, Path.ChangeExtension(Path.GetFileName(nwfFilePath), ".nwd"));
+           
+            string mainModelPath =
+                Path.Combine(Path.GetDirectoryName(nwdRootPath), "Сводная модель");
+            
+            string nwdMainModelFilePath =
+                Path.Combine(mainModelPath, Path.ChangeExtension(Path.GetFileName(nwfFilePath), ".nwd"));
+
+            var nwcFileNames =
+                Directory.GetFiles(rootPath, "*.nwc");
+
             document.Clear();
-            foreach(var nwc in nwcFiles) {
-                document.AppendFile(nwc);
-            }
-            //document.SaveFile(document.FileName);
+            document.AppendFiles(nwcFileNames.Select(item => item).OrderBy(item => item));
+
+            document.SavedViewpoints.Clear();
+            document.SaveFile(nwfFilePath);
+            document.SaveFile(nwdFilePath);
+
+            File.Copy(nwdFilePath, nwdMainModelFilePath, true);
         }
-
-        private void UniteFiles() {
-            var document = Application.ActiveDocument;
-            var path = Path.GetDirectoryName(document.FileName);
-            var nwcFileNames = Directory.GetFiles(path, "*.nwc")
-                .Select(item => Path.GetFileName(item))
-                .GroupBy(item => GetDiscipline(item));
-
-            foreach(IGrouping<string, string> nwcFileName in nwcFileNames) {
-                //string newNwfFileName = 
-            }
-        }
-
-        private string GetDiscipline(string nwcName) {
-            return nwcName.Split('_').ElementAtOrDefault(2);
-        }
-
-    }
-
-
-    internal class NwcGroup {
-        public string Discipline { get; set; }
-        public List<string> NwcFiles { get; set; }
     }
 }
