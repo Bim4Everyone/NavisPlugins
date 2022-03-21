@@ -33,8 +33,8 @@ namespace NavisDisciplineChecker {
             DocumentClash clash = document.GetClash();
             clash.TestsData.TestsRunAllTests();
 
-            // document.SaveFile(nwfFilePath);
-            // document.SaveFile(Path.Combine(rootPath, "!Отчёты", nwdFileName));
+            document.SaveFile(nwfFilePath);
+            document.SaveFile(Path.Combine(rootPath, "!Отчёты", nwdFileName));
 
             var result = clash.TestsData.Tests
                 .OfType<ClashTest>()
