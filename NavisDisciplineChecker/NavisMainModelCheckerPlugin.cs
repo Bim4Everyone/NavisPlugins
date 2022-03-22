@@ -53,7 +53,9 @@ namespace NavisDisciplineChecker {
                 .FirstOrDefault();
 
             using(Workbook workbook = new Workbook()) {
-                if(!string.IsNullOrEmpty(reportNamePath)) {
+                if(string.IsNullOrEmpty(reportNamePath)) {
+                    reportNamePath = Path.Combine(rootPath, "Прогресс устранения коллизий.xlsx");
+                } else {
                     workbook.LoadDocument(reportNamePath);
                 }
 
