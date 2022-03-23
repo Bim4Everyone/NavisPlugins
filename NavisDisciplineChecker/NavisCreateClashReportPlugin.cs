@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 
 using Autodesk.Navisworks.Api;
 using Autodesk.Navisworks.Api.Clash;
@@ -43,46 +42,6 @@ namespace NavisDisciplineChecker {
                             .ToList()
                     })
                 .ToList();
-        }
-    }
-
-    internal class ClashReport {
-        public string Name { get; set; }
-        public List<Clash> Clashes { get; set; } = new List<Clash>();
-    }
-
-    internal class Clash {
-        public Clash(ClashResult clashResult) {
-            Name = clashResult.DisplayName;
-            ClashElement1 = new ClashElement(clashResult.Item1);
-            ClashElement2 = new ClashElement(clashResult.Item2);
-        }
-
-        public string Name { get; set; }
-        public ClashElement ClashElement1 { get; set; }
-        public ClashElement ClashElement2 { get; set; }
-    }
-
-    internal class ClashElement {
-        public ClashElement(ModelItem modelItem) {
-            Id = ToDisplayString(modelItem, "LcRevitId", "LcOaNat64AttributeValue");
-            Name = ToDisplayString(modelItem, "LcOaNode", "LcOaSceneBaseUserName");
-            TypeName = ToDisplayString(modelItem, "LcOaNode", "LcOaSceneBaseClassUserName");
-            LayerName = ToDisplayString(modelItem, "LcOaNode", "LcOaNodeLayer");
-            SourceFileName = ToDisplayString(modelItem, "LcOaNode", "LcOaNodeSourceFile");
-        }
-
-        public string Id { get; set; }
-        public string Name { get; set; }
-        public string TypeName { get; set; }
-        public string LayerName { get; set; }
-        public string SourceFileName { get; set; }
-
-        private static string ToDisplayString(ModelItem modelItem, string categoryName, string propertyName) {
-            return modelItem.Ancestors
-                .First.PropertyCategories
-                .FindCategoryByName(categoryName)
-                ?.Properties.FindPropertyByName(propertyName).Value?.ToDisplayString();
         }
     }
 }
