@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
@@ -7,18 +8,18 @@ using Autodesk.Navisworks.Api.Plugins;
 
 namespace NavisDisciplineChecker {
 
-    [Plugin("NavisDisciplineChecker", "budaevaler", 
+    [Plugin("NavisDisciplineChecker", "budaevaler",
         DisplayName = "Проверка nwf", ToolTip = "Проверка nwf по разделам")]
     public class NavisDisciplineCheckerPlugin : AddInPlugin {
         public override int Execute(params string[] parameters) {
-            CombineDisciplineFiles();
-            return 0;
+            return CombineDisciplineFiles();
         }
 
-        private void CombineDisciplineFiles() {
+        private int CombineDisciplineFiles() {
             var document = Application.ActiveDocument;
 
             var nwfFilePath = document.FileName;
+            var errorFileName = Path.ChangeExtension(nwfFilePath, ".error");
             var rootPath = Path.GetDirectoryName(nwfFilePath);
             var nwdRootPath = Path.GetDirectoryName(rootPath);
 
@@ -34,14 +35,20 @@ namespace NavisDisciplineChecker {
             var nwcFileNames =
                 Directory.GetFiles(rootPath, "*.nwc");
 
-            document.Clear();
-            document.AppendFiles(nwcFileNames.Select(item => item).OrderBy(item => item));
+            try {
+                document.Clear();
+                document.AppendFiles(nwcFileNames.Select(item => item).OrderBy(item => item));
 
-            document.SavedViewpoints.Clear();
-            document.SaveFile(nwfFilePath);
-            document.SaveFile(nwdFilePath);
+                document.SavedViewpoints.Clear();
+                document.SaveFile(nwfFilePath);
+                document.SaveFile(nwdFilePath);
 
-            File.Copy(nwdFilePath, nwdMainModelFilePath, true);
+                File.Copy(nwdFilePath, nwdMainModelFilePath, true);
+                return 0;
+            } catch(Exception ex) {
+                File.WriteAllText(errorFileName, ex.ToString());
+                return 1;
+            }
         }
     }
 }
