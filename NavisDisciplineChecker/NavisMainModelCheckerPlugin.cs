@@ -89,8 +89,7 @@ namespace NavisDisciplineChecker {
 
                 workbook.SaveDocument(reportNamePath);
             }
-
-            Process.Start(reportNamePath);
+            
             return 0;
         }
     }
