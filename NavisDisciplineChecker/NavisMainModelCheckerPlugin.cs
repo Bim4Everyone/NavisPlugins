@@ -36,12 +36,16 @@ namespace NavisDisciplineChecker {
                 = currentDate + "_" +
                   Path.ChangeExtension(Path.GetFileName(nwfFilePath), ".nwd");
             
+            
+            var nwdFilePath = Path.Combine(rootPath, "!Отчёты", currentDate, nwdFileName);
+            Directory.CreateDirectory(Path.GetDirectoryName(nwdFilePath));
+            
             try {
                 DocumentClash clash = document.GetClash();
                 clash.TestsData.TestsRunAllTests();
 
                 document.SaveFile(nwfFilePath);
-                document.SaveFile(Path.Combine(rootPath, "!Отчёты", nwdFileName));
+                document.SaveFile(nwdFilePath);
 
                 var result = clash.TestsData.Tests
                     .OfType<ClashTest>()
@@ -57,13 +61,8 @@ namespace NavisDisciplineChecker {
                     .ToDictionary(item => item.TestName, item => item.Count);
 
                 var reportNamePath = Path.Combine(rootPath, projectName + "_" + "Прогресс устранения коллизий.xlsx");
-                if(!File.Exists(reportNamePath)) {
-                    reportNamePath = Directory.GetFiles(rootPath, "*.xlsx")
-                        .FirstOrDefault();
-                }
-
                 using(Workbook workbook = new Workbook()) {
-                    if(!string.IsNullOrEmpty(reportNamePath)) {
+                    if(File.Exists(reportNamePath)) {
                         workbook.LoadDocument(reportNamePath);
                     }
 
