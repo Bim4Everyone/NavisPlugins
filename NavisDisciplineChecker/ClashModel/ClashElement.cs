@@ -1,7 +1,12 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
 using Autodesk.Navisworks.Api;
 
-namespace NavisDisciplineChecker
-{
+namespace NavisDisciplineChecker.ClashModel {
     public class ClashElement {
         public ClashElement(ModelItem modelItem) {
             Id = ToDisplayString(modelItem, "LcRevitId", "LcOaNat64AttributeValue");

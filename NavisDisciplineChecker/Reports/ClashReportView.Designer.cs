@@ -1,6 +1,6 @@
 ﻿
 namespace NavisDisciplineChecker.Reports {
-    partial class ClashReportTemplate {
+    partial class ClashReportView {
         /// <summary>
         /// Required designer variable.
         /// </summary>
@@ -24,24 +24,39 @@ namespace NavisDisciplineChecker.Reports {
         /// the contents of this method with the code editor.
         /// </summary>
         private void InitializeComponent() {
-            components = new System.ComponentModel.Container();
-            this.Detail = new DevExpress.XtraReports.UI.DetailBand();
             this.TopMargin = new DevExpress.XtraReports.UI.TopMarginBand();
             this.BottomMargin = new DevExpress.XtraReports.UI.BottomMarginBand();
-            ((System.ComponentModel.ISupportInitialize) (this)).BeginInit();
-            this.TopMargin.Height = 100;
-            this.BottomMargin.Height = 100;
+            this.Detail = new DevExpress.XtraReports.UI.DetailBand();
+            ((System.ComponentModel.ISupportInitialize)(this)).BeginInit();
+            // 
+            // TopMargin
+            // 
+            this.TopMargin.Name = "TopMargin";
+            // 
+            // BottomMargin
+            // 
+            this.BottomMargin.Name = "BottomMargin";
+            // 
+            // Detail
+            // 
+            this.Detail.Name = "Detail";
+            // 
+            // ClashReportView
+            // 
             this.Bands.AddRange(new DevExpress.XtraReports.UI.Band[] {
-            this.Detail,
             this.TopMargin,
-            this.BottomMargin});
-            ((System.ComponentModel.ISupportInitialize) (this)).EndInit();
+            this.BottomMargin,
+            this.Detail});
+            this.Font = new System.Drawing.Font("Arial", 9.75F);
+            this.Version = "21.2";
+            ((System.ComponentModel.ISupportInitialize)(this)).EndInit();
+
         }
 
         #endregion
 
-        private DevExpress.XtraReports.UI.DetailBand Detail;
         private DevExpress.XtraReports.UI.TopMarginBand TopMargin;
         private DevExpress.XtraReports.UI.BottomMarginBand BottomMargin;
+        private DevExpress.XtraReports.UI.DetailBand Detail;
     }
 }

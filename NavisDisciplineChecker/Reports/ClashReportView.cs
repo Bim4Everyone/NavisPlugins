@@ -6,8 +6,8 @@ using System.Drawing;
 using DevExpress.XtraReports.UI;
 
 namespace NavisDisciplineChecker.Reports {
-    public partial class ClashReportTemplate : DevExpress.XtraReports.UI.XtraReport {
-        public ClashReportTemplate() {
+    public partial class ClashReportView : DevExpress.XtraReports.UI.XtraReport {
+        public ClashReportView() {
             InitializeComponent();
         }
 

@@ -1,9 +1,12 @@
-using Autodesk.Navisworks.Api.Clash;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace NavisDisciplineChecker
-{
+namespace NavisDisciplineChecker.ClashModel {
     public class Clash {
-        public Clash(ClashResult clashResult) {
+        public Clash(Autodesk.Navisworks.Api.Clash.ClashResult clashResult) {
             Name = clashResult.DisplayName;
             ClashElement1 = new ClashElement(clashResult.Item1);
             ClashElement2 = new ClashElement(clashResult.Item2);

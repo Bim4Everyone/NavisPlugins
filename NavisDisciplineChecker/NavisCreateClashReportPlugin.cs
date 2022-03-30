@@ -4,6 +4,8 @@ using Autodesk.Navisworks.Api;
 using Autodesk.Navisworks.Api.Clash;
 using Autodesk.Navisworks.Api.Plugins;
 
+using NavisDisciplineChecker.ClashModel;
+
 namespace NavisDisciplineChecker {
     [Plugin("NavisCreateClashReportPlugin", "budaevaler",
         DisplayName = "Создать отчет коллизий", ToolTip = "Создает отчет коллизий")]
