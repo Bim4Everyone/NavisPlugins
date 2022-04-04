@@ -10,16 +10,16 @@ namespace NavisDisciplineChecker.ClashModel {
     public class ClashElement {
         public ClashElement(ModelItem modelItem) {
             Id = ToDisplayString(modelItem, "LcRevitId", "LcOaNat64AttributeValue");
-            Name = ToDisplayString(modelItem, "LcOaNode", "LcOaSceneBaseUserName");
-            TypeName = ToDisplayString(modelItem, "LcOaNode", "LcOaSceneBaseClassUserName");
-            LayerName = ToDisplayString(modelItem, "LcOaNode", "LcOaNodeLayer");
+            CategoryName = ToDisplayString(modelItem, "LcRevitData_Element", "LcRevitPropertyElementCategory");
+            TypeName = ToDisplayString(modelItem, "LcRevitData_Element", "LcRevitPropertyElementType");
+            LevelName = ToDisplayString(modelItem, "ReferenceLevel", "Name");
             SourceFileName = ToDisplayString(modelItem, "LcOaNode", "LcOaNodeSourceFile");
         }
 
         public string Id { get; set; }
-        public string Name { get; set; }
+        public string CategoryName { get; set; }
         public string TypeName { get; set; }
-        public string LayerName { get; set; }
+        public string LevelName { get; set; }
         public string SourceFileName { get; set; }
 
         private static string ToDisplayString(ModelItem modelItem, string categoryName, string propertyName) {
