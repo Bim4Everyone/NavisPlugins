@@ -24,6 +24,7 @@ namespace NavisDisciplineChecker {
             var document = Application.ActiveDocument;
 
             var nwfFilePath = document.FileName;
+            var logFileName = Path.ChangeExtension(nwfFilePath, ".log");
             var errorFileName = Path.ChangeExtension(nwfFilePath, ".error");
 
             var rootPath = Path.GetDirectoryName(nwfFilePath);
@@ -35,69 +36,81 @@ namespace NavisDisciplineChecker {
             var nwdFileName
                 = currentDate + "_" +
                   Path.ChangeExtension(Path.GetFileName(nwfFilePath), ".nwd");
-            
-            
+
+
             var nwdFilePath = Path.Combine(rootPath, "!Отчёты", currentDate, nwdFileName);
             Directory.CreateDirectory(Path.GetDirectoryName(nwdFilePath));
-            
+
             try {
-                DocumentClash clash = document.GetClash();
-                clash.TestsData.TestsRunAllTests();
+                using(SimpleLogger logger = new SimpleLogger(logFileName)) {
 
-                document.SaveFile(nwfFilePath);
-                document.SaveFile(nwdFilePath);
+                    DocumentClash clash = document.GetClash();
 
-                var result = clash.TestsData.Tests
-                    .OfType<ClashTest>()
-                    .Select(item => new {
-                        TestName = item.DisplayName,
-                        Comments = item.Children
-                            .OfType<ClashResult>()
-                            .Where(comment => comment.Status == ClashResultStatus.New
-                                              || comment.Status == ClashResultStatus.Active)
-                            .ToList()
-                    })
-                    .Select(item => new {TestName = item.TestName, Count = item.Comments.Count})
-                    .ToDictionary(item => item.TestName, item => item.Count);
+                    clash.TestsData.TestsRunAllTests();
+                    logger.WriteLine("Запуск поиска коллизий.");
 
-                var reportNamePath = Path.Combine(rootPath, projectName + "_" + "Прогресс устранения коллизий.xlsx");
-                using(Workbook workbook = new Workbook()) {
-                    if(File.Exists(reportNamePath)) {
-                        workbook.LoadDocument(reportNamePath);
-                    }
+                    document.SaveFile(nwfFilePath);
+                    logger.WriteLine($"Сохранение файла NWF \"{nwfFilePath}\".");
 
-                    Worksheet worksheet = workbook.Worksheets.FirstOrDefault();
-                    int lastColumnIndex = worksheet.Columns.LastUsedIndex;
-                    var cell = worksheet.Cells[0, lastColumnIndex];
-                    if((DateTime.Now.Date - cell.Value.DateTimeValue.Date) > TimeSpan.FromDays(1)) {
-                        lastColumnIndex++;
-                    }
+                    document.SaveFile(nwdFilePath);
+                    logger.WriteLine($"Сохранение файла NWD \"{nwdFilePath}\".");
 
-                    worksheet.Cells[0, lastColumnIndex].NumberFormat = "@";
-                    worksheet.Cells[0, lastColumnIndex].SetValueFromText(currentDate);
-                    for(int index = 1; index <= worksheet.Rows.LastUsedIndex; index++) {
-                        var testName = worksheet.Cells[index, 0].DisplayText;
-                        if(result.TryGetValue(testName, out int count)) {
-                            result.Remove(testName);
-                            worksheet.Cells[index, lastColumnIndex].SetValueFromText(count.ToString());
-                        } else {
-                            worksheet.Cells[index, lastColumnIndex].SetValueFromText(null);
+                    var result = clash.TestsData.Tests
+                        .OfType<ClashTest>()
+                        .Select(item => new {
+                            TestName = item.DisplayName,
+                            Comments = item.Children
+                                .OfType<ClashResult>()
+                                .Where(comment => comment.Status == ClashResultStatus.New
+                                                  || comment.Status == ClashResultStatus.Active)
+                                .ToList()
+                        })
+                        .Select(item => new {TestName = item.TestName, Count = item.Comments.Count})
+                        .ToDictionary(item => item.TestName, item => item.Count);
+
+                    var reportNamePath =
+                        Path.Combine(rootPath, projectName + "_" + "Прогресс устранения коллизий.xlsx");
+
+                    using(Workbook workbook = new Workbook()) {
+                        if(File.Exists(reportNamePath)) {
+                            workbook.LoadDocument(reportNamePath);
+                            logger.WriteLine($"Открытие файла XLSX \"{reportNamePath}\".");
                         }
+
+                        Worksheet worksheet = workbook.Worksheets.FirstOrDefault();
+                        int lastColumnIndex = worksheet.Columns.LastUsedIndex;
+                        var cell = worksheet.Cells[0, lastColumnIndex];
+                        if((DateTime.Now.Date - cell.Value.DateTimeValue.Date) > TimeSpan.FromDays(1)) {
+                            lastColumnIndex++;
+                        }
+
+                        worksheet.Cells[0, lastColumnIndex].NumberFormat = "@";
+                        worksheet.Cells[0, lastColumnIndex].SetValueFromText(currentDate);
+                        for(int index = 1; index <= worksheet.Rows.LastUsedIndex; index++) {
+                            var testName = worksheet.Cells[index, 0].DisplayText;
+                            if(result.TryGetValue(testName, out int count)) {
+                                result.Remove(testName);
+                                worksheet.Cells[index, lastColumnIndex].SetValueFromText(count.ToString());
+                            } else {
+                                worksheet.Cells[index, lastColumnIndex].SetValueFromText(null);
+                            }
+                        }
+
+                        foreach(KeyValuePair<string, int> kvp in result) {
+                            int rowIndex = worksheet.Rows.LastUsedIndex + 1;
+                            worksheet.Cells[rowIndex, 0]
+                                .SetValueFromText(kvp.Key);
+
+                            worksheet.Cells[rowIndex, lastColumnIndex]
+                                .SetValueFromText(kvp.Value.ToString());
+                        }
+
+                        workbook.SaveDocument(reportNamePath);
+                        logger.WriteLine($"Сохранение файла XLSX \"{reportNamePath}\".");
                     }
 
-                    foreach(KeyValuePair<string, int> kvp in result) {
-                        int rowIndex = worksheet.Rows.LastUsedIndex + 1;
-                        worksheet.Cells[rowIndex, 0]
-                            .SetValueFromText(kvp.Key);
-
-                        worksheet.Cells[rowIndex, lastColumnIndex]
-                            .SetValueFromText(kvp.Value.ToString());
-                    }
-
-                    workbook.SaveDocument(reportNamePath);
+                    return 0;
                 }
-
-                return 0;
             } catch(Exception ex) {
                 File.WriteAllText(errorFileName, ex.ToString());
                 return 1;
