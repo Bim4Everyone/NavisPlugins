@@ -19,7 +19,10 @@ namespace NavisDisciplineChecker {
             var document = Application.ActiveDocument;
 
             var nwfFilePath = document.FileName;
+
+            var logFileName = Path.ChangeExtension(nwfFilePath, ".log");
             var errorFileName = Path.ChangeExtension(nwfFilePath, ".error");
+
             var rootPath = Path.GetDirectoryName(nwfFilePath);
             var nwdRootPath = Path.GetDirectoryName(rootPath);
 
@@ -36,15 +39,28 @@ namespace NavisDisciplineChecker {
                 Directory.GetFiles(rootPath, "*.nwc");
 
             try {
-                document.Clear();
-                document.AppendFiles(nwcFileNames.Select(item => item).OrderBy(item => item));
+                using(SimpleLogger logger = new SimpleLogger(logFileName)) {
+                    document.Clear();
+                    logger.WriteLine($"Очистка файла NWF \"{nwfFilePath}\".");
 
-                document.SavedViewpoints.Clear();
-                document.SaveFile(nwfFilePath);
-                document.SaveFile(nwdFilePath);
+                    document.AppendFiles(nwcFileNames.Select(item => item).OrderBy(item => item));
+                    logger.WriteLine($"Добавление файлов NWС " +
+                                     $"{Environment.NewLine} - " +
+                                     $"\"{string.Join(Environment.NewLine + " - ", nwcFileNames.Select(item => item).OrderBy(item => item))}\".");
 
-                File.Copy(nwdFilePath, nwdMainModelFilePath, true);
-                return 0;
+                    document.SavedViewpoints.Clear();
+                    logger.WriteLine($"Очистка точек обзора.");
+
+                    document.SaveFile(nwfFilePath);
+                    logger.WriteLine($"Сохранение файла NWF \"{nwfFilePath}\".");
+
+                    document.SaveFile(nwdFilePath);
+                    logger.WriteLine($"Сохранение файла NWD \"{nwdFilePath}\".");
+
+                    File.Copy(nwdFilePath, nwdMainModelFilePath, true);
+                    logger.WriteLine($"Копирование файла NWD \"{nwdMainModelFilePath}\".");
+                    return 0;
+                }
             } catch(Exception ex) {
                 File.WriteAllText(errorFileName, ex.ToString());
                 return 1;
