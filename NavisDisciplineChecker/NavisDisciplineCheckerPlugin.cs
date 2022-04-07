@@ -46,7 +46,7 @@ namespace NavisDisciplineChecker {
                     document.AppendFiles(nwcFileNames.Select(item => item).OrderBy(item => item));
                     logger.WriteLine($"Добавление файлов NWС " +
                                      $"{Environment.NewLine} - " +
-                                     $"\"{string.Join(Environment.NewLine + " - ", nwcFileNames.Select(item => item).OrderBy(item => item))}\".");
+                                     $"{string.Join(Environment.NewLine + " - ", nwcFileNames.Select(item => item).OrderBy(item => item))}");
 
                     document.SavedViewpoints.Clear();
                     logger.WriteLine($"Очистка точек обзора.");
