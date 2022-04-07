@@ -17,97 +17,117 @@ namespace NavisDisciplineChecker {
         DisplayName = "Создать отчет коллизий", ToolTip = "Создает отчет коллизий")]
     public class NavisCreateClashReportPlugin : AddInPlugin {
         public override int Execute(params string[] parameters) {
-            CreateClashReportPlugin(parameters.FirstOrDefault() ?? DateTime.Now.ToString("yy.MM.dd"));
-            return 0;
+            return CreateClashReportPlugin(parameters.FirstOrDefault() ?? DateTime.Now.ToString("yy.MM.dd"));
         }
 
-        private void CreateClashReportPlugin(string currentDate) {
+        private int CreateClashReportPlugin(string currentDate) {
             var document = Application.ActiveDocument;
+
+            var nwfFilePath = document.FileName;
+
+            var logFileName = Path.ChangeExtension(nwfFilePath, ".log");
+            var errorFileName = Path.ChangeExtension(nwfFilePath, ".error");
+
             var clashReportDirectoryPath =
                 Path.Combine(Path.GetDirectoryName(document.FileName), "!Отчёты", currentDate);
 
-            DocumentClash clash = document.GetClash();
-            clash.TestsData.TestsRunAllTests();
+            try {
+                using(SimpleLogger logger = new SimpleLogger(logFileName)) {
+                    DocumentClash clash = document.GetClash();
 
-            var clashes = clash.TestsData.Tests
-                .OfType<ClashTest>()
-                .Select(item => new {
-                    TestName = item.DisplayName,
-                    ClashResults = item.Children
-                        .OfType<ClashResult>()
-                        .Where(comment => comment.Status == ClashResultStatus.New
-                                          || comment.Status == ClashResultStatus.Active)
-                        .ToList()
-                })
-                .Where(item => item.ClashResults.Count > 0);
+                    clash.TestsData.TestsRunAllTests();
+                    logger.WriteLine("Запуск поиска коллизий.");
 
-
-
-            var clashReports = clashes
-                .Select(item =>
-                    new ClashReport() {
-                        Name = item.TestName,
-                        Clashes = item.ClashResults
-                            .Select(clashResult => new Clash(clashResult))
-                            .OrderBy(clashResult => clashResult.Name, new LogicalStringComparer())
-                            .ToList()
-                    })
-                .ToList();
-
-            Directory.CreateDirectory(clashReportDirectoryPath);
-            foreach(ClashReport clashReport in clashReports) {
-                using(StreamWriter stream =
-                      new StreamWriter(Path.Combine(clashReportDirectoryPath, clashReport.Name + ".html"))) {
-                    stream.WriteLine("<html>");
-                    stream.WriteLine("<head>");
-                    stream.WriteLine("<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\">");
-                    stream.WriteLine($"<title>Отчет по коллизиям \"{clashReport.Name}\".</title>");
-                    stream.WriteLine("<style type=\"text/css\">");
-                    stream.WriteLine("table, th, td {");
-                    stream.WriteLine("border: 1px solid black;");
-                    stream.WriteLine("border-collapse: collapse;");
-                    stream.WriteLine("}");
-                    stream.WriteLine("</style>");
-                    stream.WriteLine("</head>");
+                    var clashes = clash.TestsData.Tests
+                        .OfType<ClashTest>()
+                        .Select(item => new {
+                            TestName = item.DisplayName,
+                            ClashResults = item.Children
+                                .OfType<ClashResult>()
+                                .Where(comment => comment.Status == ClashResultStatus.New
+                                                  || comment.Status == ClashResultStatus.Active)
+                                .ToList()
+                        })
+                        .Where(item => item.ClashResults.Count > 0);
 
 
-                    stream.WriteLine($"<caption>{clashReport.Name}</caption>");
-                    stream.WriteLine("<table>");
-                    stream.WriteLine("<tr>");
 
-                    stream.WriteLine("<th>Id</th>");
-                    stream.WriteLine("<th>Уровень</th>");
-                    stream.WriteLine("<th>Категория</th>");
-                    stream.WriteLine("<th>Имя типа</th>");
-                    stream.WriteLine("<th>Имя файла</th>");
+                    var clashReports = clashes
+                        .Select(item =>
+                            new ClashReport() {
+                                Name = item.TestName,
+                                Clashes = item.ClashResults
+                                    .Select(clashResult => new Clash(clashResult))
+                                    .OrderBy(clashResult => clashResult.Name, new LogicalStringComparer())
+                                    .ToList()
+                            })
+                        .ToList();
 
-                    stream.WriteLine("<th>Id</th>");
-                    stream.WriteLine("<th>Уровень</th>");
-                    stream.WriteLine("<th>Категория</th>");
-                    stream.WriteLine("<th>Имя типа</th>");
-                    stream.WriteLine("<th>Имя файла</th>");
+                    Directory.CreateDirectory(clashReportDirectoryPath);
+                    logger.WriteLine($"Создание директории \"{clashReportDirectoryPath}\".");
 
-                    stream.WriteLine("</tr>");
+                    foreach(ClashReport clashReport in clashReports) {
+                        logger.WriteLine($"Создание отчета коллизии \"{clashReport.Name}\".");
 
-                    foreach(Clash reportClash in clashReport.Clashes) {
-                        stream.WriteLine("<tr>");
-                        stream.WriteLine($"<td>{reportClash.ClashElement1.Id}</td>");
-                        stream.WriteLine($"<td>{reportClash.ClashElement1.LevelName}</td>");
-                        stream.WriteLine($"<td>{reportClash.ClashElement1.CategoryName}</td>");
-                        stream.WriteLine($"<td>{reportClash.ClashElement1.TypeName}</td>");
-                        stream.WriteLine($"<td>{reportClash.ClashElement1.SourceFileName}</td>");
+                        using(StreamWriter stream =
+                              new StreamWriter(Path.Combine(clashReportDirectoryPath, clashReport.Name + ".html"))) {
+                            stream.WriteLine("<html>");
+                            stream.WriteLine("<head>");
+                            stream.WriteLine("<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\">");
+                            stream.WriteLine($"<title>Отчет по коллизиям \"{clashReport.Name}\".</title>");
+                            stream.WriteLine("<style type=\"text/css\">");
+                            stream.WriteLine("table, th, td {");
+                            stream.WriteLine("border: 1px solid black;");
+                            stream.WriteLine("border-collapse: collapse;");
+                            stream.WriteLine("}");
+                            stream.WriteLine("</style>");
+                            stream.WriteLine("</head>");
 
-                        stream.WriteLine($"<td>{reportClash.ClashElement2.Id}</td>");
-                        stream.WriteLine($"<td>{reportClash.ClashElement2.LevelName}</td>");
-                        stream.WriteLine($"<td>{reportClash.ClashElement2.CategoryName}</td>");
-                        stream.WriteLine($"<td>{reportClash.ClashElement2.TypeName}</td>");
-                        stream.WriteLine($"<td>{reportClash.ClashElement2.SourceFileName}</td>");
-                        stream.WriteLine("</tr>");
+
+                            stream.WriteLine($"<caption>{clashReport.Name}</caption>");
+                            stream.WriteLine("<table>");
+                            stream.WriteLine("<tr>");
+
+                            stream.WriteLine("<th>Id</th>");
+                            stream.WriteLine("<th>Уровень</th>");
+                            stream.WriteLine("<th>Категория</th>");
+                            stream.WriteLine("<th>Имя типа</th>");
+                            stream.WriteLine("<th>Имя файла</th>");
+
+                            stream.WriteLine("<th>Id</th>");
+                            stream.WriteLine("<th>Уровень</th>");
+                            stream.WriteLine("<th>Категория</th>");
+                            stream.WriteLine("<th>Имя типа</th>");
+                            stream.WriteLine("<th>Имя файла</th>");
+
+                            stream.WriteLine("</tr>");
+
+                            foreach(Clash reportClash in clashReport.Clashes) {
+                                stream.WriteLine("<tr>");
+                                stream.WriteLine($"<td>{reportClash.ClashElement1.Id}</td>");
+                                stream.WriteLine($"<td>{reportClash.ClashElement1.LevelName}</td>");
+                                stream.WriteLine($"<td>{reportClash.ClashElement1.CategoryName}</td>");
+                                stream.WriteLine($"<td>{reportClash.ClashElement1.TypeName}</td>");
+                                stream.WriteLine($"<td>{reportClash.ClashElement1.SourceFileName}</td>");
+
+                                stream.WriteLine($"<td>{reportClash.ClashElement2.Id}</td>");
+                                stream.WriteLine($"<td>{reportClash.ClashElement2.LevelName}</td>");
+                                stream.WriteLine($"<td>{reportClash.ClashElement2.CategoryName}</td>");
+                                stream.WriteLine($"<td>{reportClash.ClashElement2.TypeName}</td>");
+                                stream.WriteLine($"<td>{reportClash.ClashElement2.SourceFileName}</td>");
+                                stream.WriteLine("</tr>");
+                            }
+
+                            stream.WriteLine("</html>");
+                            stream.Flush();
+                        }
                     }
 
-                    stream.WriteLine("</html>");
-                    stream.Flush();
+                    return 0;
                 }
+            } catch(Exception ex) {
+                File.WriteAllText(errorFileName, ex.ToString());
+                return 1;
             }
         }
     }
