@@ -38,32 +38,12 @@
 			<HintPath>C:\Program Files (x86)\DevExpress 21.2\Components\Bin\Framework\DevExpress.Office.v21.2.Core.dll</HintPath>
 		</Reference>
 
-		<Reference Include="DevExpress.Printing.v21.2.Core, Version=21.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a">
-			<HintPath>C:\Program Files (x86)\DevExpress 21.2\Components\Bin\Framework\DevExpress.Printing.v21.2.Core.dll</HintPath>
-		</Reference>
-
 		<Reference Include="DevExpress.Spreadsheet.v21.2.Core, Version=21.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a">
 			<HintPath>C:\Program Files (x86)\DevExpress 21.2\Components\Bin\Framework\DevExpress.Spreadsheet.v21.2.Core.dll</HintPath>
-		</Reference>
-
-		<Reference Include="DevExpress.XtraPrinting.v21.2, Version=21.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a">
-			<HintPath>C:\Program Files (x86)\DevExpress 21.2\Components\Bin\Framework\DevExpress.XtraPrinting.v21.2.dll</HintPath>
-		</Reference>
-
-		<Reference Include="DevExpress.XtraReports.v21.2, Version=21.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a">
-			<HintPath>C:\Program Files (x86)\DevExpress 21.2\Components\Bin\Framework\DevExpress.XtraReports.v21.2.dll</HintPath>
-		</Reference>
-
-		<Reference Include="DevExpress.XtraSpreadsheet.v21.2, Version=21.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a">
-			<HintPath>C:\Program Files (x86)\DevExpress 21.2\Components\Bin\Framework\DevExpress.XtraSpreadsheet.v21.2.dll</HintPath>
 		</Reference>
 
 		<Reference Include="System.Deployment" />
 
 		<Reference Include="System.Windows.Forms" />
-
-		<Reference Include="Web.DemoData.v21.2, Version=21.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a">
-			<HintPath>C:\Program Files (x86)\DevExpress 21.2\Components\Bin\Framework\Web.DemoData.v21.2.dll</HintPath>
-		</Reference>
 	</ItemGroup>
 </Project>
