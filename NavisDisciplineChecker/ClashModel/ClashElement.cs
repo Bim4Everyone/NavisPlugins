@@ -9,6 +9,10 @@ using Autodesk.Navisworks.Api;
 namespace NavisDisciplineChecker.ClashModel {
     public class ClashElement {
         public ClashElement(ModelItem modelItem) {
+            if(modelItem == null) {
+                throw new ArgumentNullException(nameof(modelItem));
+            }
+
             Id = ToDisplayString(modelItem, "LcRevitId", "LcOaNat64AttributeValue");
             CategoryName = ToDisplayString(modelItem, "LcRevitData_Element", "LcRevitPropertyElementCategory");
             TypeName = ToDisplayString(modelItem, "LcRevitData_Element", "LcRevitPropertyElementType");
@@ -23,6 +27,10 @@ namespace NavisDisciplineChecker.ClashModel {
         public string SourceFileName { get; set; }
 
         private static string ToDisplayString(ModelItem modelItem, string categoryName, string propertyName) {
+            if(modelItem.Ancestors.First == null) {
+                return null;
+            }
+            
             return modelItem.Ancestors
                 .First.PropertyCategories
                 .FindCategoryByName(categoryName)
