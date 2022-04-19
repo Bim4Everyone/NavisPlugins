@@ -27,14 +27,10 @@ namespace NavisDisciplineChecker.ClashModel {
         public string SourceFileName { get; set; }
 
         private static string ToDisplayString(ModelItem modelItem, string categoryName, string propertyName) {
-            if(modelItem.Ancestors.First == null) {
-                return null;
-            }
-            
-            return modelItem.Ancestors
-                .First.PropertyCategories
-                .FindCategoryByName(categoryName)
-                ?.Properties.FindPropertyByName(propertyName).Value?.ToDisplayString();
+            return modelItem?.Ancestors
+                ?.First?.PropertyCategories
+                ?.FindCategoryByName(categoryName)
+                ?.Properties?.FindPropertyByName(propertyName)?.Value?.ToDisplayString();
         }
     }
 }
