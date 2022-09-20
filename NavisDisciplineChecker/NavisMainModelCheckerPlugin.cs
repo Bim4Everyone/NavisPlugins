@@ -43,8 +43,10 @@ namespace NavisDisciplineChecker {
 
             try {
                 using(SimpleLogger logger = new SimpleLogger(logFileName)) {
-
                     DocumentClash clash = document.GetClash();
+                    if(clash.TestsData.Tests.Count == 0) {
+                        throw new InvalidOperationException($"У файла {Path.GetFileName(nwfFilePath)} не настроены правила коллизий.");
+                    }
 
                     clash.TestsData.TestsRunAllTests();
                     logger.WriteLine("Запуск поиска коллизий.");
