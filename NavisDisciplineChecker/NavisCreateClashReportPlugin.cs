@@ -70,13 +70,13 @@ namespace NavisDisciplineChecker {
                     logger.WriteLine($"Создание директории \"{clashReportDirectoryPath}\".");
 
                     foreach(ClashReport clashReport in clashReports) {
-                        logger.WriteLine($"Создание отчета коллизии \"{clashReport.Name}\".");
-
                         var htmlGrid =
                             new HtmlGrid(
                                     $"Отчет по коллизиям \"{clashReport.Name}\" + [{DateTime.Now.ToShortDateString()}].")
                                 .CreateTitle($"Количество пересечений: {clashReport.Clashes.Count}")
-                                .CreateColumns("№", "Id", "Уровень", "Категория", "Имя типа", "Имя файла");
+                                .CreateColumns("№",
+                                    "Id", "Уровень", "Категория", "Имя типа", "Имя файла",
+                                    "Id", "Уровень", "Категория", "Имя типа", "Имя файла");
 
                         int counter = 1;
                         foreach(Clash reportClash in clashReport.Clashes) {
@@ -93,6 +93,10 @@ namespace NavisDisciplineChecker {
                                 reportClash.ClashElement2.TypeName,
                                 reportClash.ClashElement2.SourceFileName);
                         }
+
+                        string reportPath = Path.Combine(clashReportDirectoryPath, clashReport.Name + ".html");
+                        File.WriteAllText(reportPath, htmlGrid.ToString());
+                        logger.WriteLine($"Создан отчет о коллизиях \"{reportPath}\".");
                     }
 
                     return 0;
