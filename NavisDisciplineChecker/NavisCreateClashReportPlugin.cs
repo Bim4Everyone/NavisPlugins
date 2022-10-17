@@ -35,7 +35,8 @@ namespace NavisDisciplineChecker {
                 using(SimpleLogger logger = new SimpleLogger(logFileName)) {
                     DocumentClash clash = document.GetClash();
                     if(clash.TestsData.Tests.Count == 0) {
-                        throw new InvalidOperationException($"У файла {Path.GetFileName(nwfFilePath)} не настроены правила коллизий.");
+                        throw new InvalidOperationException(
+                            $"У файла {Path.GetFileName(nwfFilePath)} не настроены правила коллизий.");
                     }
 
                     clash.TestsData.TestsRunAllTests();
@@ -52,7 +53,6 @@ namespace NavisDisciplineChecker {
                                 .ToList()
                         })
                         .Where(item => item.ClashResults.Count > 0);
-
 
 
                     var clashReports = clashes
@@ -72,57 +72,26 @@ namespace NavisDisciplineChecker {
                     foreach(ClashReport clashReport in clashReports) {
                         logger.WriteLine($"Создание отчета коллизии \"{clashReport.Name}\".");
 
-                        using(StreamWriter stream =
-                              new StreamWriter(Path.Combine(clashReportDirectoryPath, clashReport.Name + ".html"))) {
-                            stream.WriteLine("<html>");
-                            stream.WriteLine("<head>");
-                            stream.WriteLine("<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\">");
-                            stream.WriteLine($"<title>Отчет по коллизиям \"{clashReport.Name}\".</title>");
-                            stream.WriteLine("<style type=\"text/css\">");
-                            stream.WriteLine("table, th, td {");
-                            stream.WriteLine("border: 1px solid black;");
-                            stream.WriteLine("border-collapse: collapse;");
-                            stream.WriteLine("}");
-                            stream.WriteLine("</style>");
-                            stream.WriteLine("</head>");
+                        var htmlGrid =
+                            new HtmlGrid(
+                                    $"Отчет по коллизиям \"{clashReport.Name}\" + [{DateTime.Now.ToShortDateString()}].")
+                                .CreateTitle($"Количество пересечений: {clashReport.Clashes.Count}")
+                                .CreateColumns("№", "Id", "Уровень", "Категория", "Имя типа", "Имя файла");
 
-
-                            stream.WriteLine($"<caption>{clashReport.Name}</caption>");
-                            stream.WriteLine("<table>");
-                            stream.WriteLine("<tr>");
-
-                            stream.WriteLine("<th>Id</th>");
-                            stream.WriteLine("<th>Уровень</th>");
-                            stream.WriteLine("<th>Категория</th>");
-                            stream.WriteLine("<th>Имя типа</th>");
-                            stream.WriteLine("<th>Имя файла</th>");
-
-                            stream.WriteLine("<th>Id</th>");
-                            stream.WriteLine("<th>Уровень</th>");
-                            stream.WriteLine("<th>Категория</th>");
-                            stream.WriteLine("<th>Имя типа</th>");
-                            stream.WriteLine("<th>Имя файла</th>");
-
-                            stream.WriteLine("</tr>");
-
-                            foreach(Clash reportClash in clashReport.Clashes) {
-                                stream.WriteLine("<tr>");
-                                stream.WriteLine($"<td>{reportClash.ClashElement1.Id}</td>");
-                                stream.WriteLine($"<td>{reportClash.ClashElement1.LevelName}</td>");
-                                stream.WriteLine($"<td>{reportClash.ClashElement1.CategoryName}</td>");
-                                stream.WriteLine($"<td>{reportClash.ClashElement1.TypeName}</td>");
-                                stream.WriteLine($"<td>{reportClash.ClashElement1.SourceFileName}</td>");
-
-                                stream.WriteLine($"<td>{reportClash.ClashElement2.Id}</td>");
-                                stream.WriteLine($"<td>{reportClash.ClashElement2.LevelName}</td>");
-                                stream.WriteLine($"<td>{reportClash.ClashElement2.CategoryName}</td>");
-                                stream.WriteLine($"<td>{reportClash.ClashElement2.TypeName}</td>");
-                                stream.WriteLine($"<td>{reportClash.ClashElement2.SourceFileName}</td>");
-                                stream.WriteLine("</tr>");
-                            }
-
-                            stream.WriteLine("</html>");
-                            stream.Flush();
+                        int counter = 1;
+                        foreach(Clash reportClash in clashReport.Clashes) {
+                            htmlGrid.CreateRow(
+                                counter++.ToString(),
+                                reportClash.ClashElement1.Id,
+                                reportClash.ClashElement1.LevelName,
+                                reportClash.ClashElement1.CategoryName,
+                                reportClash.ClashElement1.TypeName,
+                                reportClash.ClashElement1.SourceFileName,
+                                reportClash.ClashElement2.Id,
+                                reportClash.ClashElement2.LevelName,
+                                reportClash.ClashElement2.CategoryName,
+                                reportClash.ClashElement2.TypeName,
+                                reportClash.ClashElement2.SourceFileName);
                         }
                     }
 
