@@ -66,11 +66,6 @@ namespace NavisDisciplineChecker {
                     File.Copy(nwdFilePath, nwdMainModelFilePath, true);
                     logger.WriteLine($"Копирование файла NWD в сводную модель \"{nwdMainModelFilePath}\".");
                     
-                    if(!Directory.Exists(ptoModelPath)) {
-                        Directory.CreateDirectory(ptoModelPath);
-                        logger.WriteLine($"Создание папки ПТО \"{ptoModelPath}\".");
-                    }
-                    
                     File.Copy(nwdFilePath, nwdPtoModelFilePath, true);
                     logger.WriteLine($"Копирование файла NWD в папку ПТО \"{nwdPtoModelFilePath}\".");
                     
