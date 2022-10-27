@@ -32,8 +32,14 @@ namespace NavisDisciplineChecker {
             string mainModelPath =
                 Path.Combine(Path.GetDirectoryName(nwdRootPath), "Сводная модель");
 
+            string ptoModelPath =
+                Path.Combine(Path.GetDirectoryName(nwdRootPath), "ПТО");
+            
             string nwdMainModelFilePath =
                 Path.Combine(mainModelPath, Path.ChangeExtension(Path.GetFileName(nwfFilePath), ".nwd"));
+
+            string nwdPtoModelFilePath =
+                Path.Combine(ptoModelPath, Path.ChangeExtension(Path.GetFileName(nwfFilePath), ".nwd"));
 
             var nwcFileNames =
                 Directory.GetFiles(rootPath, "*.nwc");
@@ -58,7 +64,16 @@ namespace NavisDisciplineChecker {
                     logger.WriteLine($"Сохранение файла NWD \"{nwdFilePath}\".");
 
                     File.Copy(nwdFilePath, nwdMainModelFilePath, true);
-                    logger.WriteLine($"Копирование файла NWD \"{nwdMainModelFilePath}\".");
+                    logger.WriteLine($"Копирование файла NWD в сводную модель \"{nwdMainModelFilePath}\".");
+                    
+                    if(!Directory.Exists(ptoModelPath)) {
+                        Directory.CreateDirectory(ptoModelPath);
+                        logger.WriteLine($"Создание папки ПТО \"{ptoModelPath}\".");
+                    }
+                    
+                    File.Copy(nwdFilePath, nwdPtoModelFilePath, true);
+                    logger.WriteLine($"Копирование файла NWD в папку ПТО \"{nwdPtoModelFilePath}\".");
+                    
                     return 0;
                 }
             } catch(Exception ex) {
