@@ -10,11 +10,7 @@ using Autodesk.Navisworks.Api.DocumentParts;
 using Autodesk.Navisworks.Api.Clash;
 using Autodesk.Navisworks.Api.Interop;
 
-using DevExpress.Spreadsheet;
-using DevExpress.XtraSpreadsheet.Model;
-
-using Row = DevExpress.Spreadsheet.Row;
-using Worksheet = DevExpress.Spreadsheet.Worksheet;
+using NavisDisciplineChecker.Tables;
 
 namespace NavisDisciplineChecker {
     [Plugin("NavisMainModelCheckerPlugin", "budaevaler",
@@ -45,7 +41,8 @@ namespace NavisDisciplineChecker {
                 using(SimpleLogger logger = new SimpleLogger(logFileName)) {
                     DocumentClash clash = document.GetClash();
                     if(clash.TestsData.Tests.Count == 0) {
-                        throw new InvalidOperationException($"У файла {Path.GetFileName(nwfFilePath)} не настроены правила коллизий.");
+                        throw new InvalidOperationException(
+                            $"У файла {Path.GetFileName(nwfFilePath)} не настроены правила коллизий.");
                     }
 
                     clash.TestsData.TestsRunAllTests();
@@ -71,48 +68,37 @@ namespace NavisDisciplineChecker {
                         .ToDictionary(item => item.TestName, item => item.Count);
 
                     var reportNamePath =
-                        Path.Combine(rootPath, projectName + "_" + "Прогресс устранения коллизий.xlsx");
+                        Path.Combine(rootPath, projectName + "_" + "Прогресс устранения коллизий.csv");
 
-                    using(Workbook workbook = new Workbook()) {
-                        if(File.Exists(reportNamePath)) {
-                            workbook.LoadDocument(reportNamePath);
-                            logger.WriteLine($"Открытие файла XLSX \"{reportNamePath}\".");
-                        }
-
-                        Worksheet worksheet = workbook.Worksheets.FirstOrDefault();
-                        int lastColumnIndex = worksheet.Columns.LastUsedIndex;
-                        var cell = worksheet.Cells[0, lastColumnIndex];
-                        if((DateTime.Now.Date - cell.Value.DateTimeValue.Date) > TimeSpan.FromDays(1)) {
-                            lastColumnIndex++;
-                        }
-
-                        worksheet.Cells[0, lastColumnIndex].NumberFormat = "@";
-                        worksheet.Cells[0, lastColumnIndex].SetValueFromText(currentDate);
-                        for(int index = 1; index <= worksheet.Rows.LastUsedIndex; index++) {
-                            var testName = worksheet.Cells[index, 0].DisplayText;
-                            if(result.TryGetValue(testName, out int count)) {
-                                result.Remove(testName);
-                                worksheet.Cells[index, lastColumnIndex].SetValueFromText(count.ToString());
-                            } else {
-                                worksheet.Cells[index, lastColumnIndex].SetValueFromText(null);
-                            }
-                        }
-
-                        foreach(KeyValuePair<string, int> kvp in result) {
-                            int rowIndex = worksheet.Rows.LastUsedIndex + 1;
-                            worksheet.Cells[rowIndex, 0]
-                                .SetValueFromText(kvp.Key);
-
-                            worksheet.Cells[rowIndex, lastColumnIndex]
-                                .SetValueFromText(kvp.Value.ToString());
-                        }
-
-                        workbook.SaveDocument(reportNamePath);
-                        logger.WriteLine($"Сохранение файла XLSX \"{reportNamePath}\".");
+                    var worksheet = new CsvTable();
+                    if(File.Exists(reportNamePath)) {
+                        worksheet.LoadDocument(reportNamePath);
+                        logger.WriteLine($"Открытие файла csv \"{reportNamePath}\".");
                     }
 
-                    return 0;
+                    int lastColumnIndex = worksheet.Columns.Count - 1;
+                    worksheet.Rows[0][lastColumnIndex] = currentDate;
+                    for(int index = 1; index <= worksheet.Rows.Count; index++) {
+                        var testName = worksheet.Rows[index][0];
+                        if(result.TryGetValue(testName, out int count)) {
+                            result.Remove(testName);
+                            worksheet.Rows[index][lastColumnIndex] = count.ToString();
+                        } else {
+                            worksheet.Rows[index][lastColumnIndex] = null;
+                        }
+                    }
+
+                    foreach(KeyValuePair<string, int> kvp in result) {
+                        int rowIndex = worksheet.Rows.Count;
+                        worksheet.Rows[rowIndex][0] = kvp.Key;
+                        worksheet.Rows[rowIndex][lastColumnIndex] = kvp.Value.ToString();
+                    }
+
+                    worksheet.SaveDocument(reportNamePath);
+                    logger.WriteLine($"Сохранение файла csv \"{reportNamePath}\".");
                 }
+
+                return 0;
             } catch(Exception ex) {
                 File.WriteAllText(errorFileName, ex.ToString());
                 return 1;
