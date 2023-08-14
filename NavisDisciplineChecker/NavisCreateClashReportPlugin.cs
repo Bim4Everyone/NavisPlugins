@@ -8,8 +8,6 @@ using Autodesk.Navisworks.Api;
 using Autodesk.Navisworks.Api.Clash;
 using Autodesk.Navisworks.Api.Plugins;
 
-using DevExpress.Data.Async.Helpers;
-
 using NavisDisciplineChecker.ClashModel;
 
 namespace NavisDisciplineChecker {
