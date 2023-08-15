@@ -76,19 +76,20 @@ namespace NavisDisciplineChecker {
                         logger.WriteLine($"Открытие файла csv \"{reportNamePath}\".");
                     }
                     
-                    Column column = worksheet.CreateColumn(currentDate);
+                    Column columnName = worksheet.CreateColumn("");
+                    Column columnCount = worksheet.CreateColumn(currentDate);
                     for(int index = 0; index < worksheet.Rows.Count; index++) {
                         var testName = worksheet.Rows[index][0];
                         if(result.TryGetValue(testName, out int count)) {
                             result.Remove(testName);
-                            worksheet.Rows[index][column] = count.ToString();
+                            worksheet.Rows[index][columnCount] = count.ToString();
                         }
                     }
 
                     foreach(KeyValuePair<string, int> kvp in result) {
                         var row = worksheet.CreateRow();
-                        row[0] = kvp.Key;
-                        row[column] = kvp.Value.ToString();
+                        row[columnName] = kvp.Key;
+                        row[columnCount] = kvp.Value.ToString();
                     }
 
                     worksheet.SaveDocument(reportNamePath);
